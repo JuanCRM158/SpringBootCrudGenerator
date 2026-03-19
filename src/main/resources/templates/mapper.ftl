@@ -1,31 +1,22 @@
-package ${packageName}.${config.servicePackage?replace('/', '.')}.mapper;
+package ${packageName}.${config.servicePackage?replace('/', '.')}.mappers;
 
 import ${packageName}.${config.entityPackage?replace('/', '.')}.${className};
 import ${packageName}.${config.dtoPackage?replace('/', '.')}.${className}DTO;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
-import org.mapstruct.factory.Mappers;
+
+import org.modelmapper.ModelMapper;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring")
-public interface ${className}Mapper {
+public class ${className}Mapper {
+    private ${className}Mapper() {
+        throw new IllegalStateException("No existe un constructor para la clase");
+    }
+    private static final ModelMapper MAPPER = new ModelMapper();
+    public static ${className}DTO toModel(${className} entity) {
+        return MAPPER.map(entity, ${className}DTO.class);
+    }
 
-    ${className}Mapper INSTANCE = Mappers.getMapper(${className}Mapper.class);
-
-    ${className}DTO toDTO(${className} entity);
-
-    ${className} toEntity(${className}DTO dto);
-
-    List<${className}DTO> toDTOList(List<${className}> entities);
-
-    List<${className}> toEntityList(List<${className}DTO> dtos);
-
-    <#list columns as column>
-    <#if !column.primaryKey>
-    @Mapping(target = "${column.fieldName}", source = "${column.fieldName}")
-    </#if>
-    </#list>
-    void updateEntityFromDTO(${className}DTO dto, @MappingTarget ${className} entity);
+    public static ${className} mapmapMenuOpcionDTO(${className}DTO model) {
+        return MAPPER.map(model, ${className}.class);
+    }
 }
